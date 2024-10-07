@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Choose Language</title>
+<style>
+    @font-face {
+        font-family: 'Intro';
+        src: url('intro.otf') format('opentype');
+    }
+    body {
+        font-family: 'Intro', sans-serif;
+        background-image: url('fon.png');
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+    .flag-selector {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px; /* Increased space between flag selector and button */
+    }
+    .arrow {
+        cursor: pointer;
+        font-size: 48px; /* Larger size for visibility */
+        color: black; /* Make arrows white */
+        margin: 0 60px; /* Further spaced from the flag */
+        user-select: none;
+    }
+    .flag {
+        width: 100px; /* Adjust size as needed */
+        cursor: pointer;
+        transition: transform 0.3s ease; /* Smooth transition for flag changes */
+    }
+    .button {
+        background: linear-gradient(45deg, #ff7e5f, #feb47b); /* Gradient background */
+        border: none;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 32px;
+        font-family: 'Intro', sans-serif; /* Explicitly setting font-family for the button */
+        cursor: pointer;
+        width: 220px; /* Slightly wider button */
+        height: 120px; /* Slightly taller button */
+        transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        border-radius: 15px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        margin-top: 20px; /* Ensure clear separation from flag selector */
+    }
+    .button:hover {
+        background: linear-gradient(45deg, #feb47b, #ff7e5f); /* Inverted gradient on hover */
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        transform: translateY(-3px);
+    }
+    h1 {
+        color: white;
+        margin-bottom: 40px; /* Adjusted to space out elements */
+        font-size: 64px;
+        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+</style>
+</head>
+<body>
+    <h1>Choose Language</h1>
+    <div class="flag-selector">
+        <span class="arrow" onclick="changeFlag(-1)">❮</span>
+        <img src="ru.svg" id="flagImage" class="flag">
+        <span class="arrow" onclick="changeFlag(1)">❯</span>
+    </div>
+    <button class="button" onclick="selectLanguage()">Выбрать</button>
+    <audio id="swipeSound" src="swipe.mp3"></audio>
+    <audio id="tapSound" src="tap.mp3"></audio> <!-- Новый элемент аудио для воспроизведения при нажатии на кнопку -->
+    <script>
+        var flags = [
+            { src: 'ru.svg', link: 'ru.html' },
+            { src: 'en.svg', link: 'en.html' }
+        ];
+        var currentIndex = 0;
+
+        function changeFlag(direction) {
+            var swipeSound = document.getElementById('swipeSound');
+            swipeSound.play();
+            currentIndex += direction;
+            if (currentIndex >= flags.length) {
+                currentIndex = 0;
+            } else if (currentIndex < 0) {
+                currentIndex = flags.length - 1;
+            }
+            var flagImage = document.getElementById('flagImage');
+            flagImage.style.opacity = 0.3;
+            setTimeout(function() {
+                flagImage.src = flags[currentIndex].src;
+                flagImage.style.opacity = 1;
+            }, 150);
+        }
+       function selectLanguage() {
+            var tapSound = document.getElementById('tapSound');
+            tapSound.currentTime = 0; // Сбросить время воспроизведения на начало
+            tapSound.play().then(() => {
+                console.log("Audio played successfully");
+                // Задержка перед переходом на страницу, чтобы звук успел воспроизвестись
+                setTimeout(function() {
+                    window.location.href = flags[currentIndex].link;
+                }, 1000); // Задержка в 500 миллисекунд
+            }).catch(error => {
+                console.error("Error playing sound: ", error);
+                // Даже в случае ошибки переходить на нужную страницу
+                setTimeout(function() {
+                    window.location.href = flags[currentIndex].link;
+                }, 500);
+            });
+        }
+
+    </script>
+</body>
+</html>

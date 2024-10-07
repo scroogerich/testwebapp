@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Royal Mines</title>
+    <link href="https://fonts.googleapis.com/css?family=Baloo+Thambi" rel="stylesheet">
+    <style>
+        @import url("//fonts.googleapis.com/css?family=Pacifico&text=Pure");
+        @import url("//fonts.googleapis.com/css?family=Roboto:700&text=css");
+        @import url("//fonts.googleapis.com/css?family=Kaushan+Script&text=!");
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            background-image: url('fon.png');
+            background-size: cover; /* Или попробуйте заменить на `contain` */
+            background-repeat: no-repeat; /* Убирает повторение */
+            background-position: center; /* Центрирует фон */
+            background-attachment: fixed; /* Оставляет фон на месте при прокрутке */
+        }
+        .container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        :root {
+            --color-primary: #f6aca2;
+            --color-secondary: #f49b90;
+            --color-tertiary: #f28b7d;
+            --color-quaternary: #f07a6a;
+            --color-quinary: #ee6352;
+        }
+        @font-face {
+            font-family: 'intro';
+            src: url('intro.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        .title {
+            font-family: 'intro';
+            font-size: 4rem;
+            color: #fbad25;
+            text-shadow: 2px 2px 4px #bb6016;
+            animation: glow 5s infinite alternate ease-in-out;
+        }
+        .game-board {
+            display: flex;
+            flex-wrap: wrap;
+            width: 340px;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 10px 5px #8B4513;
+            background-color: #648831;
+        }
+        .row {
+            display: flex;
+            width: 100%;
+        }
+        .square {
+            width: 50px;
+            height: 50px;
+            background-color: #cfd746;
+            margin: 5px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .play-buttons-container {
+            display: flex;
+            justify-content: center; /* Центрирование кнопок */
+            gap: 70px; /* Добавление промежутка между кнопками */
+            width: 340px;
+            margin-bottom: 20px;
+        }
+        .reset-button, .play-button {
+            outline: none;
+            border: none;
+            cursor: pointer;
+            background: #fcad26;
+            font-size: 16px;
+            font-weight: 300;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 16px;
+            width: 80px;
+            border-radius: 16px;
+            box-shadow: 0px 6px #efa424;
+            transition: box-shadow 0.2s, top 0.2s;
+        }
+        .reset-button:hover, .play-button:hover {
+            box-shadow: 0 4px #efa424;
+            top: 2px;
+        }
+        .reset-button:active, .play-button:active {
+            box-shadow: none;
+            top: 6px;
+        }
+        .reset-button {
+            margin-right: -40px;
+        }
+        .square.active {
+            background-image: url('step.svg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+        @media screen and (min-aspect-ratio: 16/9) {
+    body, html {
+        background-color: #ffffff;
+        background-image: url('fong.png');
+        background-size: cover; /* Или попробуйте заменить на `contain` */
+        background-repeat: no-repeat; /* Убирает повторение */
+        background-position: center; /* Центрирует фон */
+        background-attachment: fixed; /* Оставляет фон на месте при прокрутке */
+    }
+
+    .title {
+        margin-top: -170px; /* Опускаем заголовок еще ниже */
+        font-size: 3rem;
+        position: relative; /* Позволяет контролировать z-index */
+        z-index: 10; /* Устанавливаем значение больше, чем у других элементов */
+    }
+
+    .game-board {
+        position: absolute; /* Позиционирование относительно ближайшего предка с относительным или абсолютным позиционированием */
+        transform: rotate(90deg) translate(-60%, -50%);
+        width: 255px;
+        height: 355px;
+        top: 52%; /* Центрируем по вертикали */
+        left: 13%; /* Центрируем по горизонтали */
+        box-shadow: 0 0 10px 5px #8B4513;
+        background-color: #648831;
+    }
+
+
+    .square {
+        width: 38px; /* Новый уменьшенный размер */
+        height: 38px; /* Новый уменьшенный размер */
+        margin: 3px; /* Уменьшаем отступы между ячейками */
+        border-radius: 5px; /* Корректируем закругленные углы */
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Изменяем тени для меньших размеров */
+    }
+
+    .play-buttons-container {
+        flex-direction: column;
+        align-items: flex-start;
+        width: auto;
+        gap: 10px;
+        margin: 0; /* Минимальные отступы */
+        position: absolute;
+        left: 140px; /* Расположить слева от игрового поля */
+        top: 40%;
+    }
+
+    .reset-button, .play-button {
+        width: 60px;
+        height: 60px;
+    }
+
+    .reset-button img, .play-button img {
+        width: 100%;
+        height: 100%;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">
+            <span>ROYAL</span>
+        </h1>
+        <div class="game-board" id="gameBoard"></div>
+        <div class="play-buttons-container">
+            <button class="reset-button">
+                <img src="pere.png" alt="Pere icon" style="width: 100%; height: 100%;">
+            </button>
+            <button class="play-button">
+                <img src="play.png" alt="Play icon" style="width: 80%; height: 80%;">
+            </button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameBoard = document.getElementById('gameBoard');
+            const resetButton = document.querySelector('.reset-button');
+            const playButton = document.querySelector('.play-button');
+            let dotsCount = 0;
+            let numRows = 8;
+
+            function initializeBoard() {
+                gameBoard.innerHTML = '';
+                for (let i = 0; i < numRows; i++) {
+                    const newRow = document.createElement('div');
+                    newRow.className = 'row';
+                    for (let j = 0; j < 6; j++) {
+                        const newSquare = document.createElement('div');
+                        newSquare.className = 'square';
+                        newRow.appendChild(newSquare);
+                    }
+                    gameBoard.appendChild(newRow);
+                }
+            }
+
+            resetButton.addEventListener('click', () => {
+                clearAllSquares();
+                dotsCount = 0;
+            });
+
+            playButton.addEventListener('click', () => {
+                if (dotsCount >= 15) {
+                    alert('Игра окончена!');
+                    return;
+                }
+
+                if (dotsCount < numRows) {
+                    placeDot(dotsCount);
+                } else {
+                    removeRowWithDot();
+                    addRowWithDot();
+                }
+                dotsCount++;
+                maintainRowCount();
+            });
+
+            function placeDot(rowNumber) {
+                const rows = Array.from(gameBoard.querySelectorAll('.row'));
+                const squares = rows[numRows - 1 - rowNumber].querySelectorAll('.square');
+                const randomSquare = Math.floor(Math.random() * squares.length);
+                squares[randomSquare].classList.add('active');
+            }
+
+            function addRowWithDot() {
+                const newRow = document.createElement('div');
+                newRow.className = 'row';
+                for (let i = 0; i < 6; i++) {
+                    const newSquare = document.createElement('div');
+                    newSquare.className = 'square';
+                    newRow.appendChild(newSquare);
+                }
+                gameBoard.insertBefore(newRow, gameBoard.firstChild);
+                placeDotInNewRow(newRow);
+            }
+
+            function placeDotInNewRow(newRow) {
+                const squares = newRow.querySelectorAll('.square');
+                const randomSquare = Math.floor(Math.random() * squares.length);
+                squares[randomSquare].classList.add('active');
+            }
+
+            function removeRowWithDot() {
+                gameBoard.removeChild(gameBoard.lastChild);
+            }
+
+            function maintainRowCount() {
+                while (gameBoard.children.length > numRows) {
+                    gameBoard.removeChild(gameBoard.lastChild);
+                }
+            }
+
+            function clearAllSquares() {
+                const squares = gameBoard.querySelectorAll('.square');
+                squares.forEach(square => square.classList.remove('active'));
+            }
+
+            function adjustOrientation() {
+                if (window.matchMedia('(min-aspect-ratio: 16/9)').matches) {
+                    numRows = 8;
+                } else {
+                    numRows = 5;
+                }
+                initializeBoard();
+                clearAllSquares();
+                dotsCount = 0;
+            }
+
+            window.addEventListener('resize', adjustOrientation);
+            adjustOrientation();
+        });
+    </script>
+</body>
+</html>
